@@ -1,0 +1,23 @@
+{
+  "name": "@hommi/graphql",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "types": "index.ts",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.8.0",
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./index.ts",
+      "require": "./index.ts",
+      "types": "./index.ts"
+    }
+  }
+}

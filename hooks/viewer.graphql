@@ -1,0 +1,32 @@
+fragment Viewer_fragment on Viewer {
+  _id
+  uid
+  tyc
+  email
+  emailVerified
+  firstName
+  lastName
+  displayName
+  notificationTopics
+  fcm
+  profilePic
+  backgroundPic
+  mailingEnabled
+  mailingId
+}
+
+query GetViewer {
+  getViewer {
+    _id
+    ...Viewer_fragment
+  }
+}
+
+mutation UpdateViewer($userData: InputViewerUpdate!) {
+  updateViewer(userData: $userData) {
+    getViewer {
+      _id
+      ...Viewer_fragment
+    }
+  }
+} 

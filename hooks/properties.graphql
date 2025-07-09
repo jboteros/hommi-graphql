@@ -1,0 +1,128 @@
+fragment PropertiesPublic_fragment on PropertyPublic {
+  _id
+  title
+  description
+  timesViewed
+  mainImage
+  mainImageBlurhash
+  slug
+  urlPath
+  code
+  images
+  rentPrice
+  salePrice
+  score
+  offerType
+  privateCharacteristics {
+    bathrooms
+    areaTotal
+    bedrooms
+    coveredParkingLots
+  }
+  address {
+    city
+    state
+    neighborhood
+    location {
+      type
+      coordinates
+    }
+  }
+}
+
+fragment PropertyFragment on Property {
+  _id
+  title
+  description
+  timesViewed
+  mainImage
+  mainImageBlurhash
+  slug
+  urlPath
+  code
+  images
+  rentPrice
+  salePrice
+  score
+  offerType
+  privateCharacteristics {
+    bathrooms
+    areaTotal
+    bedrooms
+    coveredParkingLots
+  }
+  address {
+    city
+    state
+    neighborhood
+    location {
+      type
+      coordinates
+    }
+  }
+}
+
+fragment PropertyContactInfo_fragment on Property {
+  _id
+  savedCount
+  publicationScore
+}
+
+fragment PropertyInternalNotes_fragment on Property {
+  _id
+}
+
+query GetPropertiesPublic(
+  $limit: Int
+  $page: Int
+  $filter: PropertyFilter
+  $owner: ID!
+  $company: ID!
+) {
+  getPropertiesPublic(
+    owner: $owner
+    company: $company
+    limit: $limit
+    page: $page
+    filter: $filter
+  ) {
+    docs {
+      _id
+      ...PropertiesPublic_fragment
+    }
+    hasNextPage
+    nextPage
+    totalDocs
+    totalPages
+    page
+  }
+}
+
+query GetProperty($urlPath: String!) {
+  getProperty(urlPath: $urlPath) {
+    _id
+    ...PropertyFragment
+  }
+}
+
+# Individual property queries for additional private data
+query GetPropertyContactInfo($urlPath: String!) {
+  getProperty(urlPath: $urlPath) {
+    _id
+    ...PropertyContactInfo_fragment
+  }
+}
+
+query GetPropertyInternalNotes($urlPath: String!) {
+  getProperty(urlPath: $urlPath) {
+    _id
+    ...PropertyInternalNotes_fragment
+  }
+}
+
+query GetPropertiesCountByCity {
+  getPropertiesCountByCity {
+    count
+    city
+  }
+}
