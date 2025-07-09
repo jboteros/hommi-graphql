@@ -18,6 +18,16 @@
       "import": "./index.ts",
       "require": "./index.ts",
       "types": "./index.ts"
+    },
+    "./hooks/*": {
+      "import": "./hooks/*.ts",
+      "require": "./hooks/*.ts",
+      "types": "./hooks/*.ts"
+    },
+    "./gql/*": {
+      "import": "./gql/*.ts",
+      "require": "./gql/*.ts",
+      "types": "./gql/*.ts"
     }
   }
 }

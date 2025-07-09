@@ -8,6 +8,7 @@ export {
 } from "./hooks/useGetProperties";
 
 export * from "./gql/graphql";
+export { useFragment } from "./gql/fragment-masking";
 
 // Generated types and documents
 export type {
