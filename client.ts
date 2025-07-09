@@ -9,6 +9,7 @@ const getGraphQLEndpoint = () => {
   if (typeof window === "undefined" && typeof global !== "undefined") {
     // React Native environment
     return (
+      process.env.NEXT_PUBLIC_GRAPHQL_URL ||
       process.env.EXPO_PUBLIC_GRAPHQL_URL ||
       process.env.REACT_NATIVE_GRAPHQL_URL ||
       "http://localhost:8080/graphql"
@@ -21,7 +22,7 @@ const getGraphQLEndpoint = () => {
     );
   }
   // Server/Node environment
-  return process.env.GRAPHQL_URL || "http://localhost:8080/graphql";
+  return process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:8080/graphql";
 };
 
 // Error Link
