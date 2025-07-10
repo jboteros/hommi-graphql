@@ -4,6 +4,7 @@ fragment PropertiesPublic_fragment on PropertyPublic {
   description
   timesViewed
   mainImage
+  ogImage
   mainImageBlurhash
   slug
   urlPath
@@ -36,6 +37,7 @@ fragment PropertyFragment on Property {
   description
   timesViewed
   mainImage
+  ogImage
   mainImageBlurhash
   slug
   urlPath
