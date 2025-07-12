@@ -6,6 +6,15 @@ import { cache } from "./apolloCache";
 // Environment configuration
 const getGraphQLEndpoint = () => {
   // React Native environment
+  console.log(
+    "===> 🥶 NEXT_PUBLIC_GRAPHQL_URL",
+    process.env.NEXT_PUBLIC_GRAPHQL_URL
+  );
+
+  console.log(
+    "===> 🙈 NEXT_PUBLIC_BASE_URL",
+    process.env.NEXT_PUBLIC_BASE_URL
+  );
   if (typeof window === "undefined" && typeof global !== "undefined") {
     // React Native environment
     return (
