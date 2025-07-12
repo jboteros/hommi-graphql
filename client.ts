@@ -9,20 +9,15 @@ const getGraphQLEndpoint = () => {
   if (typeof window === "undefined" && typeof global !== "undefined") {
     // React Native environment
     return (
-      process.env.NEXT_PUBLIC_GRAPHQL_URL ||
-      process.env.EXPO_PUBLIC_GRAPHQL_URL ||
-      process.env.REACT_NATIVE_GRAPHQL_URL ||
-      "http://localhost:8080/graphql"
+      process.env.NEXT_PUBLIC_GRAPHQL_URL || process.env.EXPO_PUBLIC_GRAPHQL_URL
     );
   }
   // Browser environment
   if (typeof window !== "undefined") {
-    return (
-      process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:8080/graphql"
-    );
+    return process.env.NEXT_PUBLIC_GRAPHQL_URL;
   }
   // Server/Node environment
-  return process.env.NEXT_PUBLIC_GRAPHQL_URL || "http://localhost:8080/graphql";
+  return process.env.NEXT_PUBLIC_GRAPHQL_URL;
 };
 
 // Error Link
