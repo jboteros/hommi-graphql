@@ -7,14 +7,16 @@ import { cache } from "./apolloCache";
 const getGraphQLEndpoint = () => {
   // React Native environment
   console.log(
-    "===> 🥶 NEXT_PUBLIC_GRAPHQL_URL",
-    process.env.NEXT_PUBLIC_GRAPHQL_URL
+    "===> 🥶 PUBLIC_GRAPHQL_URL",
+    process.env.NEXT_PUBLIC_GRAPHQL_URL || process.env.EXPO_PUBLIC_GRAPHQL_URL
   );
 
   console.log(
-    "===> 🙈 NEXT_PUBLIC_BASE_URL",
-    process.env.NEXT_PUBLIC_BASE_URL
+    "===> 🙈 PUBLIC_BASE_URL",
+    process.env.EXPO_PUBLIC_AUTHORIZATION ||
+      process.env.NEXT_PUBLIC_AUTHORIZATION
   );
+
   if (typeof window === "undefined" && typeof global !== "undefined") {
     // React Native environment
     return (
@@ -23,27 +25,35 @@ const getGraphQLEndpoint = () => {
   }
   // Browser environment
   if (typeof window !== "undefined") {
-    return process.env.NEXT_PUBLIC_GRAPHQL_URL;
+    return (
+      process.env.NEXT_PUBLIC_GRAPHQL_URL || process.env.EXPO_PUBLIC_GRAPHQL_URL
+    );
   }
   // Server/Node environment
-  return process.env.NEXT_PUBLIC_GRAPHQL_URL;
+  return (
+    process.env.NEXT_PUBLIC_GRAPHQL_URL || process.env.EXPO_PUBLIC_GRAPHQL_URL
+  );
 };
 
 // Error Link
-const errorLink = onError(({ operation, graphQLErrors, networkError }) => {
-  console.log("🔥", operation);
-
-  if (graphQLErrors) {
-    graphQLErrors.forEach(({ message, locations, path }) =>
-      console.log(
-        `🚨 [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-      )
-    );
+const errorLink = onError(
+  ({ graphQLErrors, networkError, operation, response }) => {
+    if (graphQLErrors) {
+      graphQLErrors.forEach(({ message, locations, path }) => {
+        console.log(
+          `💥 [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        );
+      });
+    }
+    if (networkError) {
+      console.log(`❌ [Network error]: ${networkError}`);
+    }
+    if (response) {
+      console.log(`👾 [Response]:`, response);
+    }
+    console.log(`🤝 [Operation]:`, operation);
   }
-  if (networkError) {
-    console.log(`🚨 Network error]: ${networkError}`);
-  }
-});
+);
 
 // HTTP Link
 const httpLink = new HttpLink({
@@ -81,7 +91,7 @@ const authLink = setContext(async (_, { headers }) => {
       authorization:
         process.env.EXPO_PUBLIC_AUTHORIZATION ||
         process.env.NEXT_PUBLIC_AUTHORIZATION,
-      ...(token !== null && { "x-token": `Bearer ${token}` }),
+      // ...(token !== null && { "x-token": `Bearer ${token}` }),
       timeZone,
       "user-agent": userAgent,
       "x-device-os": platform,

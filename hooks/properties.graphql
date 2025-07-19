@@ -6,6 +6,7 @@ fragment PropertiesPublic_fragment on PropertyPublic {
   mainImage
   ogImage
   mainImageBlurhash
+  propertyType
   slug
   urlPath
   code
