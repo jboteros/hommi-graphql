@@ -7,6 +7,8 @@ fragment PropertiesPublic_fragment on PropertyPublic {
   ogImage
   mainImageBlurhash
   propertyType
+  featureType
+  offerType
   slug
   urlPath
   code
@@ -14,7 +16,7 @@ fragment PropertiesPublic_fragment on PropertyPublic {
   rentPrice
   salePrice
   score
-  offerType
+
   privateCharacteristics {
     bathrooms
     areaTotal
@@ -47,6 +49,9 @@ fragment PropertyFragment on Property {
   rentPrice
   salePrice
   score
+  mainImageBlurhash
+  propertyType
+  featureType
   offerType
   privateCharacteristics {
     bathrooms

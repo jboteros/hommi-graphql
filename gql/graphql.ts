@@ -583,7 +583,7 @@ export type PropertyFilter = {
   point?: InputMaybe<PointInput>;
   polygon?: InputMaybe<PolygonInput>;
   privateCharacteristics?: InputMaybe<PrivateCharacteristicsFilter>;
-  propertyType?: InputMaybe<Array<InputMaybe<Scalars["String"]["input"]>>>;
+  propertyType?: InputMaybe<Array<InputMaybe<PropertyTypeInput>>>;
   publicCharacteristics?: InputMaybe<PublicCharacteristicsFilter>;
   rentPrice?: InputMaybe<MinMaxIntInput>;
   salePrice?: InputMaybe<MinMaxIntInput>;
@@ -916,6 +916,8 @@ export type PropertiesPublic_FragmentFragment = {
   ogImage?: string | null;
   mainImageBlurhash: string;
   propertyType?: PropertyType | null;
+  featureType?: FeatureType | null;
+  offerType: OfferType;
   slug?: string | null;
   urlPath?: string | null;
   code?: string | null;
@@ -923,7 +925,6 @@ export type PropertiesPublic_FragmentFragment = {
   rentPrice?: number | null;
   salePrice?: number | null;
   score?: number | null;
-  offerType: OfferType;
   privateCharacteristics?: {
     __typename?: "PrivateCharacteristics";
     bathrooms?: number | null;
@@ -960,6 +961,8 @@ export type PropertyFragmentFragment = {
   rentPrice?: number | null;
   salePrice?: number | null;
   score?: number | null;
+  propertyType?: PropertyType | null;
+  featureType?: FeatureType | null;
   offerType: OfferType;
   privateCharacteristics?: {
     __typename?: "PrivateCharacteristics";
@@ -1146,6 +1149,8 @@ export const PropertiesPublic_FragmentFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
           { kind: "Field", name: { kind: "Name", value: "propertyType" } },
+          { kind: "Field", name: { kind: "Name", value: "featureType" } },
+          { kind: "Field", name: { kind: "Name", value: "offerType" } },
           { kind: "Field", name: { kind: "Name", value: "slug" } },
           { kind: "Field", name: { kind: "Name", value: "urlPath" } },
           { kind: "Field", name: { kind: "Name", value: "code" } },
@@ -1153,7 +1158,6 @@ export const PropertiesPublic_FragmentFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "rentPrice" } },
           { kind: "Field", name: { kind: "Name", value: "salePrice" } },
           { kind: "Field", name: { kind: "Name", value: "score" } },
-          { kind: "Field", name: { kind: "Name", value: "offerType" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "privateCharacteristics" },
@@ -1231,6 +1235,9 @@ export const PropertyFragmentFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "rentPrice" } },
           { kind: "Field", name: { kind: "Name", value: "salePrice" } },
           { kind: "Field", name: { kind: "Name", value: "score" } },
+          { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
+          { kind: "Field", name: { kind: "Name", value: "propertyType" } },
+          { kind: "Field", name: { kind: "Name", value: "featureType" } },
           { kind: "Field", name: { kind: "Name", value: "offerType" } },
           {
             kind: "Field",
@@ -1507,6 +1514,8 @@ export const GetPropertiesPublicDocument = {
           { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
           { kind: "Field", name: { kind: "Name", value: "propertyType" } },
+          { kind: "Field", name: { kind: "Name", value: "featureType" } },
+          { kind: "Field", name: { kind: "Name", value: "offerType" } },
           { kind: "Field", name: { kind: "Name", value: "slug" } },
           { kind: "Field", name: { kind: "Name", value: "urlPath" } },
           { kind: "Field", name: { kind: "Name", value: "code" } },
@@ -1514,7 +1523,6 @@ export const GetPropertiesPublicDocument = {
           { kind: "Field", name: { kind: "Name", value: "rentPrice" } },
           { kind: "Field", name: { kind: "Name", value: "salePrice" } },
           { kind: "Field", name: { kind: "Name", value: "score" } },
-          { kind: "Field", name: { kind: "Name", value: "offerType" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "privateCharacteristics" },
@@ -1645,6 +1653,9 @@ export const GetPropertyDocument = {
           { kind: "Field", name: { kind: "Name", value: "rentPrice" } },
           { kind: "Field", name: { kind: "Name", value: "salePrice" } },
           { kind: "Field", name: { kind: "Name", value: "score" } },
+          { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
+          { kind: "Field", name: { kind: "Name", value: "propertyType" } },
+          { kind: "Field", name: { kind: "Name", value: "featureType" } },
           { kind: "Field", name: { kind: "Name", value: "offerType" } },
           {
             kind: "Field",

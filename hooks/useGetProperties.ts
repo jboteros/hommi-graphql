@@ -1,13 +1,14 @@
 import { useQuery } from "@apollo/client";
 import {
+  GetPropertiesPublicDocument,
   GetPropertiesPublicQuery,
   GetPropertiesPublicQueryVariables,
-  PropertyPublic,
-  GetPropertiesPublicDocument,
-  PropertiesPublic_FragmentFragmentDoc,
+  GetPropertyDocument,
   GetPropertyQuery,
   GetPropertyQueryVariables,
-  GetPropertyDocument,
+  PropertiesPublic_FragmentFragmentDoc,
+  PropertyPublic,
+  QueryGetPropertiesPublicArgs,
 } from "../gql/graphql";
 
 // Type for properties (currently only public data)
@@ -17,27 +18,27 @@ export type PropertyUnion = PropertyPublic;
 export const propertiesPublicFragment = PropertiesPublic_FragmentFragmentDoc;
 export const GET_PROPERTIES_PUBLIC_QUERY = GetPropertiesPublicDocument;
 
-const INITIAL_REGION = {
-  latitude: 6.2442,
-  longitude: -75.5812,
-  latitudeDelta: 0.0922,
-  longitudeDelta: 0.0421,
-};
+// const INITIAL_REGION = {
+//   latitude: 6.2442,
+//   longitude: -75.5812,
+//   latitudeDelta: 0.0922,
+//   longitudeDelta: 0.0421,
+// };
 
-type UseGetPropertiesOptions = {
-  owner?: string;
-  company?: string;
-  limit?: number;
-  page?: number;
-  filter?: {
-    search?: string;
-    privateCharacteristics?: Record<string, boolean | number | string>;
-    point?: {
-      type: string;
-      coordinates: [number, number];
-    };
-  };
-};
+// type UseGetPropertiesOptions = {
+//   owner?: string;
+//   company?: string;
+//   limit?: number;
+//   page?: number;
+//   filter?: {
+//     search?: string;
+//     privateCharacteristics?: Record<string, boolean | number | string>;
+//     point?: {
+//       type: string;
+//       coordinates: [number, number];
+//     };
+//   };
+// };
 
 // Utility function to deduplicate documents by _id
 const deduplicateDocs = <T extends { _id: string }>(
@@ -59,23 +60,26 @@ const deduplicateDocs = <T extends { _id: string }>(
 };
 
 // Base hook for public properties only
-export const useGetPropertiesPublic = (
-  options: UseGetPropertiesOptions = {}
-) => {
-  const {
-    owner = "",
-    company = "",
-    limit = 24,
-    page = 1,
-    filter = {
-      search: "",
-      privateCharacteristics: {},
-      point: {
-        type: "Point",
-        coordinates: [INITIAL_REGION.longitude, INITIAL_REGION.latitude],
-      },
-    },
-  } = options;
+export const useGetPropertiesPublic = ({
+  limit = 24,
+  page = 1,
+  filter,
+}: QueryGetPropertiesPublicArgs) => {
+  // console.log("🚀 ~ options:", options);
+  // const {
+  //   owner = "",
+  //   company = "",
+  //   limit = 24,
+  //   page = 1,
+  //   filter = {
+  //     search: "",
+  //     privateCharacteristics: {},
+  //     point: {
+  //       type: "Point",
+  //       coordinates: [INITIAL_REGION.longitude, INITIAL_REGION.latitude],
+  //     },
+  //   },
+  // } = options;
 
   const {
     data: dataProperties,
@@ -90,8 +94,8 @@ export const useGetPropertiesPublic = (
         limit,
         page,
         filter,
-        owner,
-        company,
+        owner: "",
+        company: "",
       },
       notifyOnNetworkStatusChange: true,
     }
