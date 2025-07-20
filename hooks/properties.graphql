@@ -80,20 +80,27 @@ fragment PropertyInternalNotes_fragment on Property {
   _id
 }
 
-query GetPropertiesPublic(
+query GetBreadcrumbProperties(
   $limit: Int
   $page: Int
-  $filter: PropertyFilter
-  $owner: ID!
-  $company: ID!
+  $filter: BreadcrumbPropertiesFilter
 ) {
-  getPropertiesPublic(
-    owner: $owner
-    company: $company
-    limit: $limit
-    page: $page
-    filter: $filter
-  ) {
+  getBreadcrumbProperties(limit: $limit, page: $page, filter: $filter) {
+    docs {
+      _id
+      ...PropertiesPublic_fragment
+    }
+    hasNextPage
+    limit
+    nextPage
+    page
+    totalDocs
+    totalPages
+  }
+}
+
+query GetPropertiesPublic($limit: Int, $page: Int, $filter: PropertyFilter) {
+  getPropertiesPublic(limit: $limit, page: $page, filter: $filter) {
     docs {
       _id
       ...PropertiesPublic_fragment

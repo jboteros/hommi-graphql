@@ -197,6 +197,26 @@ export type BlogTagCount = {
   tag: Scalars["String"]["output"];
 };
 
+export type BreadcrumbPropertiesFilter = {
+  city?: InputMaybe<Scalars["String"]["input"]>;
+  featureType?: InputMaybe<FeatureTypeInput>;
+  neighborhood?: InputMaybe<Scalars["String"]["input"]>;
+  offerType?: InputMaybe<OfferTypeInput>;
+  propertyType?: InputMaybe<PropertyTypeInput>;
+  state?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type BreadcrumbPropertiesPaginated = {
+  __typename?: "BreadcrumbPropertiesPaginated";
+  docs?: Maybe<Array<PropertyPublic>>;
+  hasNextPage: Scalars["Boolean"]["output"];
+  limit: Scalars["Int"]["output"];
+  nextPage?: Maybe<Scalars["Int"]["output"]>;
+  page: Scalars["Int"]["output"];
+  totalDocs: Scalars["Int"]["output"];
+  totalPages: Scalars["Int"]["output"];
+};
+
 export type CityPropertyCount = {
   __typename?: "CityPropertyCount";
   city?: Maybe<Scalars["String"]["output"]>;
@@ -555,7 +575,7 @@ export type Property = {
   featureType?: Maybe<FeatureType>;
   images?: Maybe<Array<Scalars["String"]["output"]>>;
   mainImage: Scalars["String"]["output"];
-  mainImageBlurhash: Scalars["String"]["output"];
+  mainImageBlurhash?: Maybe<Scalars["String"]["output"]>;
   offerType: OfferType;
   ogImage?: Maybe<Scalars["String"]["output"]>;
   owner?: Maybe<Viewer>;
@@ -641,7 +661,7 @@ export type PropertyPublic = {
   featureType?: Maybe<FeatureType>;
   images?: Maybe<Array<Scalars["String"]["output"]>>;
   mainImage: Scalars["String"]["output"];
-  mainImageBlurhash: Scalars["String"]["output"];
+  mainImageBlurhash?: Maybe<Scalars["String"]["output"]>;
   offerType: OfferType;
   ogImage?: Maybe<Scalars["String"]["output"]>;
   owner?: Maybe<Viewer>;
@@ -801,6 +821,7 @@ export type Query = {
   getBlogById: BlogResponse;
   getBlogStats: BlogStatsResponse;
   getBlogs: BlogPaginatedResponse;
+  getBreadcrumbProperties: BreadcrumbPropertiesPaginated;
   getMinMaxValues?: Maybe<GetMinMaxResponse>;
   getPropertiesCountByCity: Array<CityPropertyCount>;
   getPropertiesPublic: PropertyPaginatedPublic;
@@ -833,11 +854,15 @@ export type QueryGetBlogsArgs = {
   page?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
+export type QueryGetBreadcrumbPropertiesArgs = {
+  filter?: InputMaybe<BreadcrumbPropertiesFilter>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
 export type QueryGetPropertiesPublicArgs = {
-  company: Scalars["ID"]["input"];
   filter?: InputMaybe<PropertyFilter>;
   limit?: InputMaybe<Scalars["Int"]["input"]>;
-  owner: Scalars["ID"]["input"];
   page?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -914,7 +939,7 @@ export type PropertiesPublic_FragmentFragment = {
   timesViewed?: number | null;
   mainImage: string;
   ogImage?: string | null;
-  mainImageBlurhash: string;
+  mainImageBlurhash?: string | null;
   propertyType?: PropertyType | null;
   featureType?: FeatureType | null;
   offerType: OfferType;
@@ -953,7 +978,7 @@ export type PropertyFragmentFragment = {
   timesViewed?: number | null;
   mainImage: string;
   ogImage?: string | null;
-  mainImageBlurhash: string;
+  mainImageBlurhash?: string | null;
   slug?: string | null;
   urlPath?: string | null;
   code?: string | null;
@@ -996,12 +1021,36 @@ export type PropertyInternalNotes_FragmentFragment = {
   _id: string;
 } & { " $fragmentName"?: "PropertyInternalNotes_FragmentFragment" };
 
+export type GetBreadcrumbPropertiesQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+  filter?: InputMaybe<BreadcrumbPropertiesFilter>;
+}>;
+
+export type GetBreadcrumbPropertiesQuery = {
+  __typename?: "Query";
+  getBreadcrumbProperties: {
+    __typename?: "BreadcrumbPropertiesPaginated";
+    hasNextPage: boolean;
+    limit: number;
+    nextPage?: number | null;
+    page: number;
+    totalDocs: number;
+    totalPages: number;
+    docs?: Array<
+      { __typename?: "PropertyPublic"; _id: string } & {
+        " $fragmentRefs"?: {
+          PropertiesPublic_FragmentFragment: PropertiesPublic_FragmentFragment;
+        };
+      }
+    > | null;
+  };
+};
+
 export type GetPropertiesPublicQueryVariables = Exact<{
   limit?: InputMaybe<Scalars["Int"]["input"]>;
   page?: InputMaybe<Scalars["Int"]["input"]>;
   filter?: InputMaybe<PropertyFilter>;
-  owner: Scalars["ID"]["input"];
-  company: Scalars["ID"]["input"];
 }>;
 
 export type GetPropertiesPublicQuery = {
@@ -1362,6 +1411,183 @@ export const Viewer_FragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<Viewer_FragmentFragment, unknown>;
+export const GetBreadcrumbPropertiesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetBreadcrumbProperties" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" },
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "page" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "filter" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "BreadcrumbPropertiesFilter" },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getBreadcrumbProperties" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "page" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "page" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filter" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "filter" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "docs" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "_id" } },
+                      {
+                        kind: "FragmentSpread",
+                        name: {
+                          kind: "Name",
+                          value: "PropertiesPublic_fragment",
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: "Field", name: { kind: "Name", value: "hasNextPage" } },
+                { kind: "Field", name: { kind: "Name", value: "limit" } },
+                { kind: "Field", name: { kind: "Name", value: "nextPage" } },
+                { kind: "Field", name: { kind: "Name", value: "page" } },
+                { kind: "Field", name: { kind: "Name", value: "totalDocs" } },
+                { kind: "Field", name: { kind: "Name", value: "totalPages" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "PropertiesPublic_fragment" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "PropertyPublic" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "_id" } },
+          { kind: "Field", name: { kind: "Name", value: "title" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "timesViewed" } },
+          { kind: "Field", name: { kind: "Name", value: "mainImage" } },
+          { kind: "Field", name: { kind: "Name", value: "ogImage" } },
+          { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
+          { kind: "Field", name: { kind: "Name", value: "propertyType" } },
+          { kind: "Field", name: { kind: "Name", value: "featureType" } },
+          { kind: "Field", name: { kind: "Name", value: "offerType" } },
+          { kind: "Field", name: { kind: "Name", value: "slug" } },
+          { kind: "Field", name: { kind: "Name", value: "urlPath" } },
+          { kind: "Field", name: { kind: "Name", value: "code" } },
+          { kind: "Field", name: { kind: "Name", value: "images" } },
+          { kind: "Field", name: { kind: "Name", value: "rentPrice" } },
+          { kind: "Field", name: { kind: "Name", value: "salePrice" } },
+          { kind: "Field", name: { kind: "Name", value: "score" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "privateCharacteristics" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "bathrooms" } },
+                { kind: "Field", name: { kind: "Name", value: "areaTotal" } },
+                { kind: "Field", name: { kind: "Name", value: "bedrooms" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "coveredParkingLots" },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "address" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "city" } },
+                { kind: "Field", name: { kind: "Name", value: "state" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "neighborhood" },
+                },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "location" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "type" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "coordinates" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetBreadcrumbPropertiesQuery,
+  GetBreadcrumbPropertiesQueryVariables
+>;
 export const GetPropertiesPublicDocument = {
   kind: "Document",
   definitions: [
@@ -1394,28 +1620,6 @@ export const GetPropertiesPublicDocument = {
             name: { kind: "Name", value: "PropertyFilter" },
           },
         },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "owner" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-        },
-        {
-          kind: "VariableDefinition",
-          variable: {
-            kind: "Variable",
-            name: { kind: "Name", value: "company" },
-          },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          },
-        },
       ],
       selectionSet: {
         kind: "SelectionSet",
@@ -1424,22 +1628,6 @@ export const GetPropertiesPublicDocument = {
             kind: "Field",
             name: { kind: "Name", value: "getPropertiesPublic" },
             arguments: [
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "owner" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "owner" },
-                },
-              },
-              {
-                kind: "Argument",
-                name: { kind: "Name", value: "company" },
-                value: {
-                  kind: "Variable",
-                  name: { kind: "Name", value: "company" },
-                },
-              },
               {
                 kind: "Argument",
                 name: { kind: "Name", value: "limit" },

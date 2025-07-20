@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import {
+  GetBreadcrumbPropertiesDocument,
   GetPropertiesPublicDocument,
   GetPropertiesPublicQuery,
   GetPropertiesPublicQueryVariables,
@@ -15,30 +16,10 @@ import {
 export type PropertyUnion = PropertyPublic;
 
 // Export the generated fragments and documents
-export const propertiesPublicFragment = PropertiesPublic_FragmentFragmentDoc;
 export const GET_PROPERTIES_PUBLIC_QUERY = GetPropertiesPublicDocument;
+export const GET_PROPERTIES_BREADCRUMB_QUERY = GetBreadcrumbPropertiesDocument;
 
-// const INITIAL_REGION = {
-//   latitude: 6.2442,
-//   longitude: -75.5812,
-//   latitudeDelta: 0.0922,
-//   longitudeDelta: 0.0421,
-// };
-
-// type UseGetPropertiesOptions = {
-//   owner?: string;
-//   company?: string;
-//   limit?: number;
-//   page?: number;
-//   filter?: {
-//     search?: string;
-//     privateCharacteristics?: Record<string, boolean | number | string>;
-//     point?: {
-//       type: string;
-//       coordinates: [number, number];
-//     };
-//   };
-// };
+export const propertiesPublicFragment = PropertiesPublic_FragmentFragmentDoc;
 
 // Utility function to deduplicate documents by _id
 const deduplicateDocs = <T extends { _id: string }>(
@@ -65,21 +46,7 @@ export const useGetPropertiesPublic = ({
   page = 1,
   filter,
 }: QueryGetPropertiesPublicArgs) => {
-  // console.log("🚀 ~ options:", options);
-  // const {
-  //   owner = "",
-  //   company = "",
-  //   limit = 24,
-  //   page = 1,
-  //   filter = {
-  //     search: "",
-  //     privateCharacteristics: {},
-  //     point: {
-  //       type: "Point",
-  //       coordinates: [INITIAL_REGION.longitude, INITIAL_REGION.latitude],
-  //     },
-  //   },
-  // } = options;
+  console.log("🔗 ~ useGetPropertiesPublic:", filter);
 
   const {
     data: dataProperties,
@@ -94,8 +61,6 @@ export const useGetPropertiesPublic = ({
         limit,
         page,
         filter,
-        owner: "",
-        company: "",
       },
       notifyOnNetworkStatusChange: true,
     }
