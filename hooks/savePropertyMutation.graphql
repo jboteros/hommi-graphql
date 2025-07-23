@@ -1,0 +1,15 @@
+mutation SaveProperty($propertyId: ID!, $userId: ID!) {
+  saveProperty(propertyId: $propertyId, userId: $userId) {
+    success
+    message
+    codeMessage
+  }
+}
+
+mutation RemoveSaveProperty($savedId: ID!) {
+  removeSaveProperty(savedId: $savedId) {
+    codeMessage
+    message
+    success
+  }
+}

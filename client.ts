@@ -1,6 +1,8 @@
 import { ApolloClient, ApolloLink, HttpLink } from "@apollo/client";
+import { connectApolloClientToVSCodeDevTools } from "@apollo/client-devtools-vscode";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
+import { getAuth } from "@react-native-firebase/auth";
 import { cache } from "./apolloCache";
 
 // Environment configuration
@@ -57,7 +59,7 @@ const errorLink = onError(
 
 // HTTP Link
 const httpLink = new HttpLink({
-  uri: getGraphQLEndpoint(),
+  uri: __DEV__ ? "http://192.168.1.4:8080/graphql" : getGraphQLEndpoint(),
 });
 
 // Auth Link
@@ -65,7 +67,9 @@ const authLink = setContext(async (_, { headers }) => {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   // For now, using a hardcoded token - in production, you'd get this from your auth system
-  const token = null;
+  const token = (await getAuth().currentUser?.getIdToken()) ?? null;
+  console.log("🤝 ~ authLink ~ token:", token);
+  console.log("🤝 ~ authLink ~ token:", _);
   // "eyJhbGciOiJSUzI1NiIsImtpZCI6IjQ3YWU0OWM0YzlkM2ViODVhNTI1NDA3MmMzMGQyZThlNzY2MWVmZTEiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiSm9obmF0YW4gQm90ZXJvIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL2hvbW1pLTU3ZGY1IiwiYXVkIjoiaG9tbWktNTdkZjUiLCJhdXRoX3RpbWUiOjE3NTE4NDU4ODcsInVzZXJfaWQiOiJTWU1ibEZjUlRSTnQ0amdudUNwQjJWM0x4b2sxIiwic3ViIjoiU1lNYmxGY1JUUk50NGpnbnVDcEIyVjNMeG9rMSIsImlhdCI6MTc1MTg0NTg4NywiZXhwIjoxNzUxODQ5NDg3LCJlbWFpbCI6ImorMUBqYi5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsiaisxQGpiLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.sU1VVvQxM_kQGcas9Bir_51tHCCrAS7ab-ID_l-l1ip08GkA6aiL_z2k5fr7X3AaFdrz25ripxpP4g0BP-NOOYuu9sktXGXdEYXKy0XHKzmd9sBSpHY-X0fkSpyG9WvBmVNG8ORiBeovT-qSWEZTaKt1cZJ96uS2ChzDuwACkqaqvSvl-75dF60-8if3--uanIPbCDLI72F0qxrJ6cmEa-vhzKe-hdLbTP6Td1p5mmd3up5asS3g7W3GGh6x1xK7-ozYdet-PdN5Wnl8OErr-V9-My_zc-aSnNWFCr_zKbepkx4SAwVgRFXwsdnMm8SA6FWkq8QtY-t3sxG3LDHoDA";
 
   // Detect platform for user agent
@@ -91,7 +95,7 @@ const authLink = setContext(async (_, { headers }) => {
       authorization:
         process.env.EXPO_PUBLIC_AUTHORIZATION ||
         process.env.NEXT_PUBLIC_AUTHORIZATION,
-      // ...(token !== null && { "x-token": `Bearer ${token}` }),
+      ...(token !== null && { "x-token": `Bearer ${token}` }),
       timeZone,
       "user-agent": userAgent,
       "x-device-os": platform,
@@ -107,5 +111,7 @@ export const client = new ApolloClient({
   link,
   cache,
 });
+
+if (client) connectApolloClientToVSCodeDevTools(client, "ws://localhost:7095");
 
 export default client;

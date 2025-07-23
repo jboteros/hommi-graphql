@@ -374,6 +374,8 @@ export type Mutation = {
   migrateRentProperties?: Maybe<Scalars["String"]["output"]>;
   publishBlog: BlogResponse;
   removeAdminRole: AdminResponse;
+  removeSaveProperty: RemoveSavedPropertyResponse;
+  saveProperty: SavedPropertyResponse;
   setUserAsAdmin: AdminResponse;
   syncUserClaims: AdminResponse;
   toggleUserStatus: AdminResponse;
@@ -426,6 +428,15 @@ export type MutationPublishBlogArgs = {
 };
 
 export type MutationRemoveAdminRoleArgs = {
+  userId: Scalars["ID"]["input"];
+};
+
+export type MutationRemoveSavePropertyArgs = {
+  savedId: Scalars["ID"]["input"];
+};
+
+export type MutationSavePropertyArgs = {
+  propertyId: Scalars["ID"]["input"];
   userId: Scalars["ID"]["input"];
 };
 
@@ -826,6 +837,8 @@ export type Query = {
   getPropertiesCountByCity: Array<CityPropertyCount>;
   getPropertiesPublic: PropertyPaginatedPublic;
   getProperty?: Maybe<Property>;
+  getSavedProperties: SavedPropertiesResponse;
+  getSavedProperty: SavedPropertyResponse;
   getUser?: Maybe<AdminUser>;
   getUsers?: Maybe<UsersListResponse>;
   getViewer?: Maybe<Viewer>;
@@ -870,6 +883,15 @@ export type QueryGetPropertyArgs = {
   urlPath: Scalars["String"]["input"];
 };
 
+export type QueryGetSavedPropertiesArgs = {
+  userId: Scalars["ID"]["input"];
+};
+
+export type QueryGetSavedPropertyArgs = {
+  propertyId: Scalars["ID"]["input"];
+  userId: Scalars["ID"]["input"];
+};
+
 export type QueryGetUserArgs = {
   uid: Scalars["String"]["input"];
 };
@@ -886,6 +908,17 @@ export type QueryPropertiesByOwnerArgs = {
   userId: Scalars["ID"]["input"];
 };
 
+export type RemoveSavedPropertyInput = {
+  savedId: Scalars["ID"]["input"];
+};
+
+export type RemoveSavedPropertyResponse = {
+  __typename?: "RemoveSavedPropertyResponse";
+  codeMessage?: Maybe<Scalars["String"]["output"]>;
+  message: Scalars["String"]["output"];
+  success: Scalars["Boolean"]["output"];
+};
+
 export type ResponseDataCompany = {
   __typename?: "ResponseDataCompany";
   getCompany?: Maybe<CompanyResponse>;
@@ -899,6 +932,28 @@ export type ResponseDataProperty = {
 export type ResponseDataViewer = {
   __typename?: "ResponseDataViewer";
   getViewer?: Maybe<Viewer>;
+};
+
+export type SavedProperties = {
+  __typename?: "SavedProperties";
+  _id: Scalars["ID"]["output"];
+  property: Property;
+  user: Viewer;
+};
+
+export type SavedPropertiesResponse = {
+  __typename?: "SavedPropertiesResponse";
+  message: Scalars["String"]["output"];
+  savedProperties?: Maybe<Array<SavedProperties>>;
+  success: Scalars["Boolean"]["output"];
+};
+
+export type SavedPropertyResponse = {
+  __typename?: "SavedPropertyResponse";
+  codeMessage?: Maybe<Scalars["String"]["output"]>;
+  message: Scalars["String"]["output"];
+  savedProperties?: Maybe<SavedProperties>;
+  success: Scalars["Boolean"]["output"];
 };
 
 export type UsersListResponse = {
@@ -929,6 +984,58 @@ export type Viewer = {
   role?: Maybe<Scalars["String"]["output"]>;
   tyc?: Maybe<Scalars["Date"]["output"]>;
   uid: Scalars["String"]["output"];
+};
+
+export type GetSavedPropertiesQueryVariables = Exact<{
+  userId: Scalars["ID"]["input"];
+}>;
+
+export type GetSavedPropertiesQuery = {
+  __typename?: "Query";
+  getSavedProperties: {
+    __typename?: "SavedPropertiesResponse";
+    message: string;
+    savedProperties?: Array<{
+      __typename?: "SavedProperties";
+      _id: string;
+      property: {
+        __typename?: "Property";
+        _id: string;
+        title: string;
+        mainImage: string;
+        mainImageBlurhash?: string | null;
+        offerType: OfferType;
+        rentPrice?: number | null;
+        salePrice?: number | null;
+        propertyType?: PropertyType | null;
+        featureType?: FeatureType | null;
+        urlPath?: string | null;
+        privateCharacteristics?: {
+          __typename?: "PrivateCharacteristics";
+          areaTotal?: number | null;
+          bathrooms?: number | null;
+          bedrooms?: number | null;
+          coveredParkingLots?: number | null;
+          uncoveredParkingLots?: number | null;
+        } | null;
+        address?: {
+          __typename?: "Address";
+          city: string;
+          country: string;
+          customAddress: string;
+          neighborhood: string;
+          state: string;
+          street: string;
+          zipCode: string;
+          location: {
+            __typename?: "GeoJSON";
+            type: string;
+            coordinates: Array<number>;
+          };
+        } | null;
+      };
+    }> | null;
+  };
 };
 
 export type PropertiesPublic_FragmentFragment = {
@@ -1128,6 +1235,35 @@ export type GetPropertiesCountByCityQuery = {
     count?: number | null;
     city?: string | null;
   }>;
+};
+
+export type SavePropertyMutationVariables = Exact<{
+  propertyId: Scalars["ID"]["input"];
+  userId: Scalars["ID"]["input"];
+}>;
+
+export type SavePropertyMutation = {
+  __typename?: "Mutation";
+  saveProperty: {
+    __typename?: "SavedPropertyResponse";
+    success: boolean;
+    message: string;
+    codeMessage?: string | null;
+  };
+};
+
+export type RemoveSavePropertyMutationVariables = Exact<{
+  savedId: Scalars["ID"]["input"];
+}>;
+
+export type RemoveSavePropertyMutation = {
+  __typename?: "Mutation";
+  removeSaveProperty: {
+    __typename?: "RemoveSavedPropertyResponse";
+    codeMessage?: string | null;
+    message: string;
+    success: boolean;
+  };
 };
 
 export type Viewer_FragmentFragment = {
@@ -1411,6 +1547,220 @@ export const Viewer_FragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<Viewer_FragmentFragment, unknown>;
+export const GetSavedPropertiesDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetSavedProperties" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "userId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getSavedProperties" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "userId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "savedProperties" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      { kind: "Field", name: { kind: "Name", value: "_id" } },
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "property" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "_id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "mainImage" },
+                            },
+                            {
+                              kind: "Field",
+                              name: {
+                                kind: "Name",
+                                value: "mainImageBlurhash",
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "offerType" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "rentPrice" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "salePrice" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "propertyType" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "featureType" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "urlPath" },
+                            },
+                            {
+                              kind: "Field",
+                              name: {
+                                kind: "Name",
+                                value: "privateCharacteristics",
+                              },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "areaTotal" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "bathrooms" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "bedrooms" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "coveredParkingLots",
+                                    },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "uncoveredParkingLots",
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "address" },
+                              selectionSet: {
+                                kind: "SelectionSet",
+                                selections: [
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "city" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "country" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "customAddress",
+                                    },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "location" },
+                                    selectionSet: {
+                                      kind: "SelectionSet",
+                                      selections: [
+                                        {
+                                          kind: "Field",
+                                          name: { kind: "Name", value: "type" },
+                                        },
+                                        {
+                                          kind: "Field",
+                                          name: {
+                                            kind: "Name",
+                                            value: "coordinates",
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: {
+                                      kind: "Name",
+                                      value: "neighborhood",
+                                    },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "state" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "street" },
+                                  },
+                                  {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "zipCode" },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetSavedPropertiesQuery,
+  GetSavedPropertiesQueryVariables
+>;
 export const GetBreadcrumbPropertiesDocument = {
   kind: "Document",
   definitions: [
@@ -2070,6 +2420,131 @@ export const GetPropertiesCountByCityDocument = {
 } as unknown as DocumentNode<
   GetPropertiesCountByCityQuery,
   GetPropertiesCountByCityQueryVariables
+>;
+export const SavePropertyDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "SaveProperty" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "propertyId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "userId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "saveProperty" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "propertyId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "propertyId" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "userId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "userId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                { kind: "Field", name: { kind: "Name", value: "codeMessage" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SavePropertyMutation,
+  SavePropertyMutationVariables
+>;
+export const RemoveSavePropertyDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "RemoveSaveProperty" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "savedId" },
+          },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "removeSaveProperty" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "savedId" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "savedId" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "codeMessage" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  RemoveSavePropertyMutation,
+  RemoveSavePropertyMutationVariables
 >;
 export const GetViewerDocument = {
   kind: "Document",

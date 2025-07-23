@@ -1,23 +1,21 @@
-import { useMemo } from "react";
-import { useMutation, useQuery, useApolloClient } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { useFragment } from "../gql/fragment-masking";
 import {
+  GetViewerDocument,
   GetViewerQuery,
   GetViewerQueryVariables,
+  UpdateViewerDocument,
   UpdateViewerMutation,
   UpdateViewerMutationVariables,
-  Viewer,
-  GetViewerDocument,
-  UpdateViewerDocument,
   Viewer_FragmentFragmentDoc,
 } from "../gql/graphql";
-import { useFragment } from "../gql/fragment-masking";
 
-// Export the generated fragment and documents
 export const viewerFragment = Viewer_FragmentFragmentDoc;
 export const GET_VIEWER_QUERY = GetViewerDocument;
 export const UPDATE_VIEWER_MUTATION = UpdateViewerDocument;
 
 export const useViewer = (uid?: string | undefined) => {
+  console.log("👾 ~ useViewer ~ uid:", uid);
   const client = useApolloClient();
 
   const {
@@ -37,13 +35,7 @@ export const useViewer = (uid?: string | undefined) => {
     UPDATE_VIEWER_MUTATION
   );
 
-  const viewer = useMemo(() => {
-    const viewerData = dataViewer?.getViewer;
-    if (!viewerData) return null;
-
-    // Use the useFragment function to properly unwrap the fragment data
-    return useFragment(Viewer_FragmentFragmentDoc, viewerData);
-  }, [dataViewer]);
+  const viewer = useFragment(Viewer_FragmentFragmentDoc, dataViewer?.getViewer);
 
   return {
     refetchViewer,

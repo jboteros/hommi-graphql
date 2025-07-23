@@ -1,0 +1,40 @@
+query GetSavedProperties($userId: ID!) {
+  getSavedProperties(userId: $userId) {
+    message
+    savedProperties {
+      _id
+      property {
+        _id
+        title
+        mainImage
+        mainImageBlurhash
+        offerType
+        rentPrice
+        salePrice
+        propertyType
+        featureType
+        urlPath
+        privateCharacteristics {
+          areaTotal
+          bathrooms
+          bedrooms
+          coveredParkingLots
+          uncoveredParkingLots
+        }
+        address {
+          city
+          country
+          customAddress
+          location {
+            type
+            coordinates
+          }
+          neighborhood
+          state
+          street
+          zipCode
+        }
+      }
+    }
+  }
+}
