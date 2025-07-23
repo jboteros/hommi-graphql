@@ -1,5 +1,7 @@
 import { useAuth } from "@/context/AuthProvider";
 import { useMutation, useQuery } from "@apollo/client";
+import { router } from "expo-router";
+import { Toast } from "toastify-react-native";
 import {
   GetSavedPropertiesDocument,
   GetSavedPropertiesQuery,
@@ -113,6 +115,12 @@ export const useSavedProperties = () => {
               },
             },
           });
+
+          Toast.show({
+            type: "success",
+            text1: "Propiedad guardada en favoritos",
+            position: "bottom",
+          });
         }
       },
     });
@@ -137,6 +145,8 @@ export const useSavedProperties = () => {
           query: GET_SAVED_PROPERTIES,
           variables: { userId: viewer?._id as string },
         });
+        console.log("🚀 ~ useSavedProperties ~ existing:", existing);
+
         if (existing) {
           cache.writeQuery({
             query: GET_SAVED_PROPERTIES,
@@ -148,6 +158,25 @@ export const useSavedProperties = () => {
                   existing.getSavedProperties.savedProperties || []
                 ).filter((p: any) => p._id !== variables.savedId),
               },
+            },
+          });
+
+          const removedProperty =
+            existing.getSavedProperties.savedProperties.find(
+              (p: any) => p._id === variables.savedId
+            );
+          const propertyData = removedProperty?.property;
+          Toast.show({
+            type: "info",
+            text1: "Propiedad eliminada de tus favoritos",
+            text2: `Has quitado "${propertyData?.title}" de tu lista.`,
+            position: "bottom",
+            
+            onPress: () => {
+              const path = `/${propertyData?.featureType}/${propertyData?.offerType}/${propertyData?.propertyType}/${propertyData?.address.state}/${propertyData?.address.city}/${propertyData?.address.neighborhood}/${propertyData?.urlPath}`;
+
+              console.log("🚀 ~ useSavedProperties ~ path:", path);
+              router.push(path as any);
             },
           });
         }
