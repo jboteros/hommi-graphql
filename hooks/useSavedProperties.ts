@@ -1,6 +1,5 @@
 import { useAuth } from "@/context/AuthProvider";
 import { useMutation, useQuery } from "@apollo/client";
-import { router } from "expo-router";
 import { Toast } from "toastify-react-native";
 import {
   GetSavedPropertiesDocument,
@@ -40,7 +39,10 @@ export const useSavedProperties = () => {
 
   const savedProperties = data?.getSavedProperties?.savedProperties || [];
 
-  const saveProperty = async (variables: SavePropertyMutationVariables) => {
+  const saveProperty = async (
+    variables: SavePropertyMutationVariables,
+    property: any
+  ) => {
     await savePropertyMutation({
       variables,
       optimisticResponse: {
@@ -63,16 +65,16 @@ export const useSavedProperties = () => {
             _id: Math.random().toString(), // Temporary ID
             property: {
               __typename: "Property",
-              _id: variables.propertyId,
-              title: "",
-              mainImage: "",
-              mainImageBlurhash: "",
-              offerType: "",
-              rentPrice: 0,
-              salePrice: 0,
-              propertyType: "",
-              featureType: "",
-              urlPath: "",
+              _id: property._id,
+              title: property.title || "",
+              mainImage: property.mainImage || "",
+              mainImageBlurhash: property.mainImageBlurhash || "",
+              offerType: property.offerType || "",
+              rentPrice: property.rentPrice || 0,
+              salePrice: property.salePrice || 0,
+              propertyType: property.propertyType || "",
+              featureType: property.featureType || "",
+              urlPath: property.urlPath || "",
               privateCharacteristics: {
                 __typename: "PrivateCharacteristics",
                 areaTotal: null,
@@ -83,18 +85,18 @@ export const useSavedProperties = () => {
               },
               address: {
                 __typename: "Address",
-                city: "",
-                country: "",
-                customAddress: "",
+                city: property.address?.city || "",
+                country: property.address?.country || "",
+                customAddress: property.address?.customAddress || "",
                 location: {
                   __typename: "GeoJSON",
                   type: "Point",
-                  coordinates: [],
+                  coordinates: property.address?.location?.coordinates || [],
                 },
-                neighborhood: "",
-                state: "",
-                street: "",
-                zipCode: "",
+                neighborhood: property.address?.neighborhood || "",
+                state: property.address?.state || "",
+                street: property.address?.street || "",
+                zipCode: property.address?.zipCode || "",
               },
             },
             user: {
@@ -118,8 +120,16 @@ export const useSavedProperties = () => {
 
           Toast.show({
             type: "success",
-            text1: "Propiedad guardada en favoritos",
+            text1: "Propiedad guardada en tu lista",
+            text2: property.title,
             position: "bottom",
+
+            onPress: () => console.log("Toast pressed"),
+            onShow: () => console.log("Toast shown"),
+            onHide: () => console.log("Toast hidden"),
+            // onPress() {
+            //   console.log("Property saved, navigating to details");
+            // },
           });
         }
       },
@@ -171,13 +181,15 @@ export const useSavedProperties = () => {
             text1: "Propiedad eliminada de tus favoritos",
             text2: `Has quitado "${propertyData?.title}" de tu lista.`,
             position: "bottom",
-            
-            onPress: () => {
-              const path = `/${propertyData?.featureType}/${propertyData?.offerType}/${propertyData?.propertyType}/${propertyData?.address.state}/${propertyData?.address.city}/${propertyData?.address.neighborhood}/${propertyData?.urlPath}`;
+            onPress: () => console.log("Toast pressed"),
+            onShow: () => console.log("Toast shown"),
+            onHide: () => console.log("Toast hidden"),
+            // onPress: () => {
+            //   const path = `/${propertyData?.featureType}/${propertyData?.offerType}/${propertyData?.propertyType}/${propertyData?.address.state}/${propertyData?.address.city}/${propertyData?.address.neighborhood}/${propertyData?.urlPath}`;
 
-              console.log("🚀 ~ useSavedProperties ~ path:", path);
-              router.push(path as any);
-            },
+            //   console.log("🚀 ~ useSavedProperties ~ path:", path);
+            //   router.push(path as any);
+            // },
           });
         }
       },
