@@ -59,7 +59,7 @@ const errorLink = onError(
 
 // HTTP Link
 const httpLink = new HttpLink({
-  uri: __DEV__ ? "http://192.168.1.4:8080/graphql" : getGraphQLEndpoint(),
+  uri: __DEV__ ? "http://192.168.1.7:8080/graphql" : getGraphQLEndpoint(),
 });
 
 // Auth Link

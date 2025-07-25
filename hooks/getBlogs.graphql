@@ -1,0 +1,17 @@
+query GetBlogs($filter: BlogFilter, $limit: Int, $page: Int) {
+  getBlogs(filter: $filter, limit: $limit, page: $page) {
+    success
+    message
+    data {
+      docs {
+        _id
+        title
+        summary
+        mainImage
+        slug
+        mainImage
+        createdAt
+      }
+    }
+  }
+}

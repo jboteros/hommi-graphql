@@ -43,6 +43,23 @@ export type Address = {
   zipCode: Scalars["String"]["output"];
 };
 
+export type AddressData = {
+  __typename?: "AddressData";
+  city: Scalars["String"]["output"];
+  country: Scalars["String"]["output"];
+  location: AddressLocation;
+  neighborhood?: Maybe<Scalars["String"]["output"]>;
+  state: Scalars["String"]["output"];
+};
+
+export type AddressDataInput = {
+  city: Scalars["String"]["input"];
+  country: Scalars["String"]["input"];
+  location: AddressLocationInput;
+  neighborhood?: InputMaybe<Scalars["String"]["input"]>;
+  state: Scalars["String"]["input"];
+};
+
 export type AddressInput = {
   city?: InputMaybe<Scalars["String"]["input"]>;
   complement: Scalars["String"]["input"];
@@ -53,6 +70,25 @@ export type AddressInput = {
   state?: InputMaybe<Scalars["String"]["input"]>;
   street?: InputMaybe<Scalars["String"]["input"]>;
   zipCode?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type AddressLocation = {
+  __typename?: "AddressLocation";
+  coordinates: Array<Scalars["Float"]["output"]>;
+  type: Scalars["String"]["output"];
+};
+
+export type AddressLocationInput = {
+  coordinates: Array<Scalars["Float"]["input"]>;
+  type: Scalars["String"]["input"];
+};
+
+export type AddressSearchHistory = {
+  __typename?: "AddressSearchHistory";
+  addressData: AddressData;
+  createdAt?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
+  user: Scalars["ID"]["output"];
 };
 
 export type AdminResponse = {
@@ -343,6 +379,12 @@ export type InputViewerUpdate = {
   tyc?: InputMaybe<Scalars["Date"]["input"]>;
 };
 
+export type Location = {
+  __typename?: "Location";
+  coordinates: Array<Scalars["Float"]["output"]>;
+  type: Scalars["String"]["output"];
+};
+
 export type Message = {
   __typename?: "Message";
   message: Scalars["String"]["output"];
@@ -373,8 +415,10 @@ export type Mutation = {
   migrateProperties?: Maybe<Scalars["String"]["output"]>;
   migrateRentProperties?: Maybe<Scalars["String"]["output"]>;
   publishBlog: BlogResponse;
+  removeAddressHistory: Scalars["Boolean"]["output"];
   removeAdminRole: AdminResponse;
   removeSaveProperty: RemoveSavedPropertyResponse;
+  saveAddressHistory: AddressSearchHistory;
   saveProperty: SavedPropertyResponse;
   setUserAsAdmin: AdminResponse;
   syncUserClaims: AdminResponse;
@@ -427,12 +471,21 @@ export type MutationPublishBlogArgs = {
   blogId: Scalars["ID"]["input"];
 };
 
+export type MutationRemoveAddressHistoryArgs = {
+  id: Scalars["ID"]["input"];
+};
+
 export type MutationRemoveAdminRoleArgs = {
   userId: Scalars["ID"]["input"];
 };
 
 export type MutationRemoveSavePropertyArgs = {
   savedId: Scalars["ID"]["input"];
+};
+
+export type MutationSaveAddressHistoryArgs = {
+  addressData: AddressDataInput;
+  userId: Scalars["ID"]["input"];
 };
 
 export type MutationSavePropertyArgs = {
@@ -837,8 +890,10 @@ export type Query = {
   getPropertiesCountByCity: Array<CityPropertyCount>;
   getPropertiesPublic: PropertyPaginatedPublic;
   getProperty?: Maybe<Property>;
+  getSavedAddressHistory: Array<AddressSearchHistory>;
   getSavedProperties: SavedPropertiesResponse;
   getSavedProperty: SavedPropertyResponse;
+  getSuggestedLocations: Array<SuggestedLocation>;
   getUser?: Maybe<AdminUser>;
   getUsers?: Maybe<UsersListResponse>;
   getViewer?: Maybe<Viewer>;
@@ -881,6 +936,10 @@ export type QueryGetPropertiesPublicArgs = {
 
 export type QueryGetPropertyArgs = {
   urlPath: Scalars["String"]["input"];
+};
+
+export type QueryGetSavedAddressHistoryArgs = {
+  userId: Scalars["ID"]["input"];
 };
 
 export type QueryGetSavedPropertiesArgs = {
@@ -956,6 +1015,16 @@ export type SavedPropertyResponse = {
   success: Scalars["Boolean"]["output"];
 };
 
+export type SuggestedLocation = {
+  __typename?: "SuggestedLocation";
+  city: Scalars["String"]["output"];
+  count: Scalars["Int"]["output"];
+  country: Scalars["String"]["output"];
+  location: Location;
+  neighborhood?: Maybe<Scalars["String"]["output"]>;
+  state: Scalars["String"]["output"];
+};
+
 export type UsersListResponse = {
   __typename?: "UsersListResponse";
   pagination: PaginationInfo;
@@ -984,6 +1053,33 @@ export type Viewer = {
   role?: Maybe<Scalars["String"]["output"]>;
   tyc?: Maybe<Scalars["Date"]["output"]>;
   uid: Scalars["String"]["output"];
+};
+
+export type GetBlogsQueryVariables = Exact<{
+  filter?: InputMaybe<BlogFilter>;
+  limit?: InputMaybe<Scalars["Int"]["input"]>;
+  page?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type GetBlogsQuery = {
+  __typename?: "Query";
+  getBlogs: {
+    __typename?: "BlogPaginatedResponse";
+    success: boolean;
+    message: string;
+    data?: {
+      __typename?: "BlogPaginatedPublic";
+      docs?: Array<{
+        __typename?: "BlogPublic";
+        _id: string;
+        title: string;
+        summary: string;
+        mainImage: string;
+        slug: string;
+        createdAt?: string | null;
+      }> | null;
+    } | null;
+  };
 };
 
 export type GetSavedPropertiesQueryVariables = Exact<{
@@ -1547,6 +1643,130 @@ export const Viewer_FragmentFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<Viewer_FragmentFragment, unknown>;
+export const GetBlogsDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "GetBlogs" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "filter" },
+          },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "BlogFilter" },
+          },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: {
+            kind: "Variable",
+            name: { kind: "Name", value: "limit" },
+          },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "page" } },
+          type: { kind: "NamedType", name: { kind: "Name", value: "Int" } },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "getBlogs" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "filter" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "filter" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "limit" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "limit" },
+                },
+              },
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "page" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "page" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                { kind: "Field", name: { kind: "Name", value: "success" } },
+                { kind: "Field", name: { kind: "Name", value: "message" } },
+                {
+                  kind: "Field",
+                  name: { kind: "Name", value: "data" },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "Field",
+                        name: { kind: "Name", value: "docs" },
+                        selectionSet: {
+                          kind: "SelectionSet",
+                          selections: [
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "_id" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "title" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "summary" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "mainImage" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "slug" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "mainImage" },
+                            },
+                            {
+                              kind: "Field",
+                              name: { kind: "Name", value: "createdAt" },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetBlogsQuery, GetBlogsQueryVariables>;
 export const GetSavedPropertiesDocument = {
   kind: "Document",
   definitions: [
