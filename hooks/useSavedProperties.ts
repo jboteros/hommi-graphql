@@ -1,6 +1,6 @@
 import { useAuth } from "@/context/AuthProvider";
 import { useMutation, useQuery } from "@apollo/client";
-import { Toast } from "toastify-react-native";
+// import { Toast } from "toastify-react-native";
 import {
   GetSavedPropertiesDocument,
   GetSavedPropertiesQuery,
@@ -118,19 +118,19 @@ export const useSavedProperties = () => {
             },
           });
 
-          Toast.show({
-            type: "success",
-            text1: "Propiedad guardada en tu lista",
-            text2: property.title,
-            position: "bottom",
+          // Toast.show({
+          //   type: "success",
+          //   text1: "Propiedad guardada en tu lista",
+          //   text2: property.title,
+          //   position: "bottom",
 
-            onPress: () => console.log("Toast pressed"),
-            onShow: () => console.log("Toast shown"),
-            onHide: () => console.log("Toast hidden"),
-            // onPress() {
-            //   console.log("Property saved, navigating to details");
-            // },
-          });
+          //   onPress: () => console.log("Toast pressed"),
+          //   onShow: () => console.log("Toast shown"),
+          //   onHide: () => console.log("Toast hidden"),
+          //   // onPress() {
+          //   //   console.log("Property saved, navigating to details");
+          //   // },
+          // });
         }
       },
     });
@@ -176,21 +176,21 @@ export const useSavedProperties = () => {
               (p: any) => p._id === variables.savedId
             );
           const propertyData = removedProperty?.property;
-          Toast.show({
-            type: "info",
-            text1: "Propiedad eliminada de tus favoritos",
-            text2: `Has quitado "${propertyData?.title}" de tu lista.`,
-            position: "bottom",
-            onPress: () => console.log("Toast pressed"),
-            onShow: () => console.log("Toast shown"),
-            onHide: () => console.log("Toast hidden"),
-            // onPress: () => {
-            //   const path = `/${propertyData?.featureType}/${propertyData?.offerType}/${propertyData?.propertyType}/${propertyData?.address.state}/${propertyData?.address.city}/${propertyData?.address.neighborhood}/${propertyData?.urlPath}`;
+          // Toast.show({
+          //   type: "info",
+          //   text1: "Propiedad eliminada de tus favoritos",
+          //   text2: `Has quitado "${propertyData?.title}" de tu lista.`,
+          //   position: "bottom",
+          //   onPress: () => console.log("Toast pressed"),
+          //   onShow: () => console.log("Toast shown"),
+          //   onHide: () => console.log("Toast hidden"),
+          //   // onPress: () => {
+          //   //   const path = `/${propertyData?.featureType}/${propertyData?.offerType}/${propertyData?.propertyType}/${propertyData?.address.state}/${propertyData?.address.city}/${propertyData?.address.neighborhood}/${propertyData?.urlPath}`;
 
-            //   console.log("🚀 ~ useSavedProperties ~ path:", path);
-            //   router.push(path as any);
-            // },
-          });
+          //   //   console.log("🚀 ~ useSavedProperties ~ path:", path);
+          //   //   router.push(path as any);
+          //   // },
+          // });
         }
       },
     });
