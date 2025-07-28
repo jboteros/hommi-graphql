@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuth } from "@/context/AuthProvider";
 import { useMutation, useQuery } from "@apollo/client";
 // import { Toast } from "toastify-react-native";
