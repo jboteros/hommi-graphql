@@ -3,6 +3,7 @@ fragment PropertiesPublic_fragment on PropertyPublic {
   title
   description
   timesViewed
+  ogImage
   mainImage
   ogImage
   mainImageBlurhash

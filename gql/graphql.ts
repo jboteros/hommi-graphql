@@ -408,6 +408,7 @@ export type Mutation = {
   createBlog: BlogResponse;
   createCompany: ResponseDataCompany;
   createProperty: ResponseDataProperty;
+  createUrlShorter?: Maybe<UrlShorter>;
   createViewer: ResponseDataViewer;
   deleteBlog: BlogResponse;
   deleteUser: AdminResponse;
@@ -453,6 +454,12 @@ export type MutationCreateCompanyArgs = {
 
 export type MutationCreatePropertyArgs = {
   propertyData: PropertyInput;
+};
+
+export type MutationCreateUrlShorterArgs = {
+  ogMetadata?: InputMaybe<OgMetadataInput>;
+  originalUrl: Scalars["String"]["input"];
+  referer: Scalars["String"]["input"];
 };
 
 export type MutationCreateViewerArgs = {
@@ -529,6 +536,21 @@ export type MutationUpdateUserEmailArgs = {
 
 export type MutationUpdateViewerArgs = {
   userData: InputViewerUpdate;
+};
+
+export type OgMetadata = {
+  __typename?: "OGMetadata";
+  description?: Maybe<Scalars["String"]["output"]>;
+  image?: Maybe<Scalars["String"]["output"]>;
+  title?: Maybe<Scalars["String"]["output"]>;
+  url?: Maybe<Scalars["String"]["output"]>;
+};
+
+export type OgMetadataInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  image?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars["String"]["input"]>;
+  url?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export enum OfferType {
@@ -894,6 +916,7 @@ export type Query = {
   getSavedProperties: SavedPropertiesResponse;
   getSavedProperty: SavedPropertyResponse;
   getSuggestedLocations: Array<SuggestedLocation>;
+  getUrlShorter?: Maybe<UrlShorter>;
   getUser?: Maybe<AdminUser>;
   getUsers?: Maybe<UsersListResponse>;
   getViewer?: Maybe<Viewer>;
@@ -949,6 +972,10 @@ export type QueryGetSavedPropertiesArgs = {
 export type QueryGetSavedPropertyArgs = {
   propertyId: Scalars["ID"]["input"];
   userId: Scalars["ID"]["input"];
+};
+
+export type QueryGetUrlShorterArgs = {
+  code: Scalars["String"]["input"];
 };
 
 export type QueryGetUserArgs = {
@@ -1023,6 +1050,18 @@ export type SuggestedLocation = {
   location: Location;
   neighborhood?: Maybe<Scalars["String"]["output"]>;
   state: Scalars["String"]["output"];
+};
+
+export type UrlShorter = {
+  __typename?: "UrlShorter";
+  clicks: Scalars["Int"]["output"];
+  code: Scalars["String"]["output"];
+  createdAt: Scalars["Date"]["output"];
+  expiresAt?: Maybe<Scalars["Date"]["output"]>;
+  ogMetadata?: Maybe<OgMetadata>;
+  originalUrl: Scalars["String"]["output"];
+  referer: Scalars["ID"]["output"];
+  shortUrl: Scalars["String"]["output"];
 };
 
 export type UsersListResponse = {
@@ -1140,8 +1179,8 @@ export type PropertiesPublic_FragmentFragment = {
   title: string;
   description: string;
   timesViewed?: number | null;
-  mainImage: string;
   ogImage?: string | null;
+  mainImage: string;
   mainImageBlurhash?: string | null;
   propertyType?: PropertyType | null;
   featureType?: FeatureType | null;
@@ -1426,6 +1465,7 @@ export const PropertiesPublic_FragmentFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "title" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "timesViewed" } },
+          { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImage" } },
           { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
@@ -2092,6 +2132,7 @@ export const GetBreadcrumbPropertiesDocument = {
           { kind: "Field", name: { kind: "Name", value: "title" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "timesViewed" } },
+          { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImage" } },
           { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
@@ -2268,6 +2309,7 @@ export const GetPropertiesPublicDocument = {
           { kind: "Field", name: { kind: "Name", value: "title" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "timesViewed" } },
+          { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImage" } },
           { kind: "Field", name: { kind: "Name", value: "ogImage" } },
           { kind: "Field", name: { kind: "Name", value: "mainImageBlurhash" } },
