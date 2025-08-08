@@ -15,7 +15,6 @@ export const GET_VIEWER_QUERY = GetViewerDocument;
 export const UPDATE_VIEWER_MUTATION = UpdateViewerDocument;
 
 export const useViewer = (uid?: string | undefined) => {
-  console.log("👾 ~ useViewer ~ uid:", uid);
   const client = useApolloClient();
 
   const {
@@ -26,6 +25,9 @@ export const useViewer = (uid?: string | undefined) => {
     skip: !client || typeof uid !== "string",
     fetchPolicy: "cache-and-network",
     errorPolicy: "all",
+    onCompleted: (data) => {
+      console.log("👾 ~ useViewer ~ data:", data);
+    },
   });
 
   const [
