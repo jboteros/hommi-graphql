@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuth } from "@/context/AuthProvider";
 import { useMutation, useQuery } from "@apollo/client";
 // import { Toast } from "toastify-react-native";
@@ -172,11 +171,11 @@ export const useSavedProperties = () => {
             },
           });
 
-          const removedProperty =
-            existing.getSavedProperties.savedProperties.find(
-              (p: any) => p._id === variables.savedId
-            );
-          const propertyData = removedProperty?.property;
+          // const removedProperty =
+          //   existing.getSavedProperties.savedProperties.find(
+          //     (p: any) => p._id === variables.savedId
+          //   );
+          // const propertyData = removedProperty?.property;
           // Toast.show({
           //   type: "info",
           //   text1: "Propiedad eliminada de tus favoritos",
