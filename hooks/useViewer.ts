@@ -1,4 +1,5 @@
 import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { useEffect } from "react";
 import { useFragment } from "../gql/fragment-masking";
 import {
   GetViewerDocument,
@@ -25,10 +26,14 @@ export const useViewer = (uid?: string | undefined) => {
     skip: !client || typeof uid !== "string",
     fetchPolicy: "cache-and-network",
     errorPolicy: "all",
-    onCompleted: (data) => {
-      console.log("👾 ~ useViewer ~ data:", data);
-    },
   });
+
+  // Handle side effects when data changes
+  useEffect(() => {
+    if (dataViewer) {
+      console.log("👾 ~ useViewer ~ data:", dataViewer);
+    }
+  }, [dataViewer]);
 
   const [
     updateViewer,
