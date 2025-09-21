@@ -1,4 +1,4 @@
-import { useApolloClient, useMutation, useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client/react";
 import { useEffect } from "react";
 import { useFragment } from "../gql/fragment-masking";
 import {

@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthProvider";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client/react";
 // import { Toast } from "toastify-react-native";
 import {
   GetSavedPropertiesDocument,

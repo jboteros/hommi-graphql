@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GetBlogsDocument } from "../gql/graphql";
 
 export const useBlog = () => {
